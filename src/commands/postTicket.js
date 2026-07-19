@@ -36,6 +36,6 @@ module.exports = {
     );
 
     await channel.send({ embeds: [embed], components: [row] });
-    await interaction.reply({ content: 'Panneau de ticket posté ✅', ephemeral: true });
+    await interaction.reply({ content: 'Panneau de ticket posté ✅', flags: MessageFlags.Ephemeral });
   },
 };

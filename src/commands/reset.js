@@ -52,7 +52,7 @@ module.exports = {
           content:
             `${targetChannelOption} n'est pas reconnu comme un salon employé.\n` +
             `Si ce salon a été créé manuellement, relance en précisant l'option \`membre\`.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
 
@@ -66,7 +66,7 @@ module.exports = {
     }
 
     // --- Cas 2 : aucun salon précisé → reset de TOUS les salons employés des catégories connues ---
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     // Retrouve d'abord les salons oubliés/manuels non encore en mémoire
     let recoveredCount = 0;

@@ -36,6 +36,6 @@ module.exports = {
     );
 
     await channel.send({ content: `<@&${config.RECRUITMENT_PING_ROLE_ID}>`, embeds: [embed], components: [row] });
-    await interaction.reply({ content: 'Annonce postée ✅', ephemeral: true });
+    await interaction.reply({ content: 'Annonce postée ✅', flags: MessageFlags.Ephemeral });
   },
 };

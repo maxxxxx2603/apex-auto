@@ -49,7 +49,7 @@ module.exports = {
     // Cas 3 : aucun contexte précis → classement de tous les employés
     const entries = Object.values(data.employees).sort((a, b) => (b.totalVentes || 0) - (a.totalVentes || 0));
     if (entries.length === 0) {
-      return interaction.reply({ content: 'Aucun employé enregistré pour le moment.', ephemeral: true });
+      return interaction.reply({ content: 'Aucun employé enregistré pour le moment.', flags: MessageFlags.Ephemeral });
     }
 
     const embed = new EmbedBuilder()

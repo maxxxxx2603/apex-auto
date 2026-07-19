@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const config = require('../config');
 const { load, save } = require('../db');
 const { syncChannel, STAGE_CATEGORY } = require('../utils/syncChannel');
@@ -18,12 +18,14 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
   async execute(interaction) {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
     const member = interaction.options.getMember('membre');
     const salonOption = interaction.options.getChannel('salon');
     const data = load();
 
     if (!member) {
-      return interaction.reply({ content: 'Membre introuvable sur ce serveur.', flags: MessageFlags.Ephemeral });
+      return interaction.editReply('❌ Membre introuvable sur ce serveur.');
     }
 
     // On retrouve le salon lié à cette personne via la mémoire du bot (le lien personne <-> salon
@@ -38,10 +40,7 @@ module.exports = {
       // Salon créé manuellement et encore jamais lié : on l'associe maintenant grâce à sa catégorie.
       const stageIndex = STAGE_CATEGORY.indexOf(salonOption.parentId);
       if (stageIndex === -1) {
-        return interaction.reply({
-          content: `${salonOption} n'est dans aucune des catégories employé/palier connues.`,
-          ephemeral: true,
-        });
+        return interaction.editReply(`❌ ${salonOption} n'est dans aucune des catégories employé/palier connues.`);
       }
       channelId = salonOption.id;
       emp = {
@@ -53,12 +52,10 @@ module.exports = {
       };
       data.employees[channelId] = emp;
     } else {
-      return interaction.reply({
-        content:
-          `Je ne trouve pas de salon employé lié à ${member}.\n` +
-          `Si son salon a été créé manuellement (pas avec /employer), relance en précisant l'option \`salon\`.`,
-        ephemeral: true,
-      });
+      return interaction.editReply(
+        `❌ Je ne trouve pas de salon employé lié à ${member}.\n` +
+        `Si son salon a été créé manuellement (pas avec /employer), relance en précisant l'option \`salon\`.`
+      );
     }
 
     if (emp.stage === 0) {
@@ -74,13 +71,13 @@ module.exports = {
       await member.roles.remove(config.ROLE_UP2).catch(() => {});
       emp.stage = 3;
     } else {
-      return interaction.reply({ content: 'Ce membre est déjà au palier maximum.', ephemeral: true });
+      return interaction.editReply('⚠️ Ce membre est déjà au palier maximum.');
     }
 
     save(data);
     await syncChannel(interaction.guild, channelId, emp);
 
-    await interaction.reply(`⬆️ **${emp.displayName}** passe au palier ${emp.stage}.`);
+    await interaction.editReply(`⬆️ **${emp.displayName}** passe au palier ${emp.stage}.`);
     await log(interaction.client, '⬆️ Up de palier', `**${emp.displayName}** est passé au palier ${emp.stage} par ${interaction.user.tag}.`, 0x3498db);
   },
 };

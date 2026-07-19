@@ -43,14 +43,14 @@ module.exports = {
     if (raisonKey === 'autre' && !details) {
       return interaction.reply({
         content: 'Merci de préciser la raison dans l\'option `details` quand tu choisis "Autre".',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
     const raisonLabel = RAISON_LABELS[raisonKey];
     const raisonComplete = details ? `${raisonLabel} — ${details}` : raisonLabel;
 
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
     const data = load();
     const displayName = member.displayName || member.user.username;

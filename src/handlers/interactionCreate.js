@@ -105,7 +105,7 @@ module.exports = async function interactionCreate(client, interaction) {
       const data = load();
       const review = data.reviews[applicantId];
       if (!review) {
-        return interaction.reply({ content: 'Cette candidature a déjà été traitée ou est introuvable.', ephemeral: true });
+        return interaction.reply({ content: 'Cette candidature a déjà été traitée ou est introuvable.', flags: MessageFlags.Ephemeral });
       }
 
       const applicant = await interaction.guild.members.fetch(applicantId).catch(() => null);

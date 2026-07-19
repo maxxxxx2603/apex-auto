@@ -58,7 +58,6 @@ module.exports = {
     await member.roles.add([config.ROLE_EMPLOYER_1, config.ROLE_EMPLOYER_2]).catch(() => {});
     await member.roles.remove(config.ROLE_EMPLOYEE_ACCEPTED).catch(() => {});
 
-    const data = load();
     data.employees[channel.id] = {
       userId: member.id,
       displayName,
